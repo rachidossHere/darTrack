@@ -1,0 +1,10 @@
+<aside class="sidebar">
+  <div class="brand"><span class="brand-mark">D</span><span>DarTrack</span></div>
+  <p class="eyebrow">SUIVI DE CHANTIER</p>
+  <nav>
+    @for (item of navigation; track item.section) {
+      <button [class.active]="section() === item.section" (click)="navigate.emit(item.section)">{{ item.label }}</button>
+    }
+  </nav>
+  <div class="sidebar-foot"><span class="status-dot"></span>Prototype local</div>
+</aside>

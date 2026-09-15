@@ -1,0 +1,11 @@
+:host { display: block; }
+.sidebar { height: 100%; min-height: 100vh; box-sizing: border-box; background:#173d35; color:#edf7f0; padding:30px 20px; display:flex; flex-direction:column; }
+.brand { display:flex; align-items:center; gap:10px; font:700 22px Georgia,serif; margin-bottom:65px; }
+.brand-mark { display:grid; place-items:center; width:32px; height:32px; background:#d9efdc; color:#174d3d; border-radius:9px; font:700 19px Georgia,serif; }
+.eyebrow { margin:0 0 10px; color:#86a49a; font:700 10px/1.2 Arial,sans-serif; letter-spacing:.14em; }
+.sidebar nav { display:grid; gap:6px; }
+.sidebar nav button { border:0; background:transparent; color:#aac5bb; text-align:left; padding:13px 14px; border-radius:8px; font-size:14px; cursor:pointer; }
+.sidebar nav button.active,.sidebar nav button:hover { color:#fff; background:#24564a; }
+.sidebar-foot { margin-top:auto; color:#9cb9ae; font-size:12px; display:flex; gap:8px; align-items:center; }
+.status-dot { width:7px; height:7px; border-radius:50%; background:#77d99c; }
+@media (max-width:850px) { .sidebar { min-height:auto; padding:16px 20px; }.brand { margin-bottom:18px; }.sidebar .eyebrow,.sidebar-foot { display:none; }.sidebar nav { display:flex; overflow:auto; }.sidebar nav button { white-space:nowrap; } }

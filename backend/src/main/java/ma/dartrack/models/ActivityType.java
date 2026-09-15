@@ -1,0 +1,12 @@
+package ma.dartrack.models;
+
+public enum ActivityType {
+    PROJECT_CREATED,
+    PROJECT_UPDATED,
+    STAGE_CREATED,
+    STAGE_STATUS_CHANGED,
+    EXPENSE_ADDED,
+    DOCUMENT_ADDED,
+    STAGE_APPROVED,
+    STAGE_REJECTED
+}

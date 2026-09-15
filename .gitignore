@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.angular/
+.idea/
+.vscode/settings.json
+*.iml
+target/
+storage/
+*.log
+.env
+backend/.env
+frontend/.env
+nul

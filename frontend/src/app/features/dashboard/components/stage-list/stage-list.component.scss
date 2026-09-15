@@ -1,0 +1,19 @@
+.stage-list { display:grid; gap:8px; }
+.stage-row { display:grid; grid-template-columns:1fr 1.3fr; align-items:center; gap:16px; padding:18px 20px; border-bottom:1px solid #dce7e1; background:#fff; }
+.stage-card { background:#fff; border:1px solid #dce7e1; border-radius:8px; padding:23px; }
+.stage-card-head,.stage-title { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.stage-title { justify-content:flex-start; }
+.stage-number { color:#83a196; font:12px Georgia,serif; }
+.stage-card p { color:#70847d; font-size:13px; min-height:20px; }
+.stage-bar { display:grid; grid-template-columns:1fr 36px; align-items:center; gap:12px; }
+.stage-bar small,.stage-meta { color:#70847d; font-size:11px; }
+.progress { height:7px; border-radius:10px; background:#e0e9e3; overflow:hidden; }
+.progress i { display:block; height:100%; background:#2b9577; border-radius:inherit; }
+.stage-meta { display:flex; justify-content:space-between; margin:20px 0 9px; }
+.actions { display:flex; gap:8px; margin-top:18px; }
+.button { border:0; border-radius:6px; padding:11px 15px; cursor:pointer; font-weight:700; }
+.button.primary { background:#176d5a; color:#fff; }
+.button.subtle { background:#e8f2ec; color:#176d5a; }
+.button.danger { background:#fff0ed; color:#bd5548; }
+.empty { padding:40px; text-align:center; color:#70847d; background:#fff; border:1px dashed #b9cbc1; border-radius:8px; }
+@media (max-width:850px) { .stage-row { grid-template-columns:1fr; }.stage-row .stage-bar { grid-column:1; }.detailed { grid-template-columns:1fr; } }
