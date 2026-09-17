@@ -8,9 +8,25 @@ services:
       POSTGRES_USER: ${POSTGRES_USER:-dartrack}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dartrack}
     ports:
-      - "${POSTGRES_PORT:-5432}:5432"
+      - "${POSTGRES_PORT:-5433}:5432"
     volumes:
       - dartrack-postgres-data:/var/lib/postgresql/data
 
+  pgadmin:
+    image: dpage/pgadmin4:9
+    container_name: dartrack-pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-admin@dartrack.com}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-dartrack}
+    ports:
+      - "${PGADMIN_PORT:-5051}:80"
+    volumes:
+      - dartrack-pgadmin-data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+    depends_on:
+      - postgres
+
 volumes:
   dartrack-postgres-data:
+  dartrack-pgadmin-data:

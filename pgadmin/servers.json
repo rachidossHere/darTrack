@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "DarTrack PostgreSQL",
+      "Group": "Servers",
+      "Host": "postgres",
+      "Port": 5432,
+      "MaintenanceDB": "dartrack",
+      "Username": "dartrack",
+      "SSLMode": "prefer"
+    }
+  }
+}

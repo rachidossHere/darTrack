@@ -2,7 +2,7 @@ spring:
   application:
     name: dartrack-backend
   datasource:
-    url: ${DB_URL:jdbc:postgresql://localhost:5432/dartrack}
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/dartrack}
     username: ${DB_USERNAME:dartrack}
     password: ${DB_PASSWORD:dartrack}
   jpa:

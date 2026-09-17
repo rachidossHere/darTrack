@@ -23,11 +23,13 @@ Le socle contient :
 
 ## Démarrage local
 
-Copier `.env.example` vers `.env`, puis démarrer PostgreSQL :
+Copier `.env.example` vers `.env`, puis démarrer PostgreSQL et pgAdmin :
 
 ```bash
-docker compose up -d postgres
+docker compose up -d postgres pgadmin
 ```
+
+pgAdmin est ensuite disponible sur `http://localhost:5051`. Pour enregistrer PostgreSQL dans pgAdmin, utiliser `postgres` comme nom d'hôte, `5432` comme port et les identifiants `POSTGRES_USER` / `POSTGRES_PASSWORD` du fichier `.env`.
 
 Lancer le backend :
 

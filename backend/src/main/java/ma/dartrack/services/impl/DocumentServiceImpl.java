@@ -108,12 +108,13 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Transactional(readOnly = true)
-    public DownloadedDocument download(UUID id) {
+    @Override
+    public DocumentService.DownloadedDocument download(UUID id) {
         Document document = getDocument(id);
         try {
             Resource resource = new UrlResource(Path.of(document.getLocalPath()).toUri());
             if (!resource.exists() || !resource.isReadable()) throw new ResourceNotFoundException("Fichier introuvable : " + id);
-            return new DownloadedDocument(resource, document.getOriginalName(), document.getMimeType());
+            return new DocumentService.DownloadedDocument(resource, document.getOriginalName(), document.getMimeType());
         } catch (IOException exception) {
             throw new ResourceNotFoundException("Fichier introuvable : " + id);
         }
@@ -143,5 +144,4 @@ public class DocumentServiceImpl implements DocumentService {
     private Document getDocument(UUID id) { return documentRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Document introuvable : " + id)); }
     private DocumentResponse toResponse(Document document) { return new DocumentResponse(document.getId(), document.getProject().getId(), document.getStage() == null ? null : document.getStage().getId(), document.getOriginalName(), document.getMimeType(), document.getSize(), document.getType(), document.getAddedAt()); }
 
-    public record DownloadedDocument(Resource resource, String filename, String mimeType) {}
 }
