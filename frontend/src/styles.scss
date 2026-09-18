@@ -2,3 +2,6 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.toast-success .mdc-snackbar__surface { background:#246b50 !important; }
+.toast-error .mdc-snackbar__surface { background:#a34539 !important; }

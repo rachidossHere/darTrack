@@ -47,7 +47,7 @@ public class StageController {
     }
 
     @PutMapping("/stages/{id}")
-    public StageResponse update(@PathVariable UUID id, @Valid @RequestBody StageCreateRequest request) {
+    public StageResponse update(@PathVariable UUID id, @Valid @RequestBody StageUpdateRequest request) {
         return stageService.update(id, request);
     }
 

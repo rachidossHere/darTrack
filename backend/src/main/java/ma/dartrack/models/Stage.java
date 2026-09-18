@@ -97,21 +97,30 @@ public class Stage {
     public OffsetDateTime getCreatedAt() { return createdAt; }
     public OffsetDateTime getUpdatedAt() { return updatedAt; }
 
-    public void updateDetails(String title, String description, Integer displayOrder,
+    public void updateDetails(String title, String description,
                               LocalDate plannedStartDate, LocalDate plannedEndDate,
                               BigDecimal plannedBudget, Integer progress, OffsetDateTime updatedAt) {
+        if (status == StageStatus.PENDING_APPROVAL || status == StageStatus.APPROVED) {
+            throw new IllegalStateException("Impossible de modifier l'étape depuis le statut " + status + ".");
+        }
         this.title = title;
         this.description = description;
-        this.displayOrder = displayOrder;
         this.plannedStartDate = plannedStartDate;
         this.plannedEndDate = plannedEndDate;
         this.plannedBudget = plannedBudget;
         this.progress = progress;
+        if (status == StageStatus.REJECTED || (status == StageStatus.TODO && progress > 0)) {
+            this.status = StageStatus.IN_PROGRESS;
+            this.rejectionComment = null;
+        }
         this.updatedAt = updatedAt;
     }
 
     public void submitForApproval(OffsetDateTime updatedAt) {
         requireStatus(StageStatus.IN_PROGRESS, "soumettre l'étape à validation");
+        if (progress != 100) {
+            throw new IllegalStateException("L'étape doit être terminée à 100 % avant sa soumission.");
+        }
         this.status = StageStatus.PENDING_APPROVAL;
         this.updatedAt = updatedAt;
     }

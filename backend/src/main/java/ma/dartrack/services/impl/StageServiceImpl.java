@@ -56,19 +56,25 @@ public class StageServiceImpl implements StageService {
     public StageResponse create(UUID projectId, StageCreateRequest request) {
         Project project = getProject(projectId);
         OffsetDateTime now = now();
+        int displayOrder = stageRepository.findFirstByProjectOrderByDisplayOrderDesc(project)
+                .map(stage -> stage.getDisplayOrder() + 1)
+                .orElse(0);
         Stage stage = new Stage(UUID.randomUUID(), project, request.title(), request.description(),
-                request.displayOrder(), request.plannedStartDate(), request.plannedEndDate(), request.plannedBudget(),
-                request.progress(), initialStatus(request.progress()), null, now, now);
+                displayOrder, request.plannedStartDate(), request.plannedEndDate(), request.plannedBudget(),
+                0, StageStatus.TODO, null, now, now);
         Stage saved = stageRepository.save(stage);
         record(saved, ActivityType.STAGE_CREATED, "Étape créée : " + saved.getTitle(), now);
         return toResponse(saved);
     }
 
-    public StageResponse update(UUID id, StageCreateRequest request) {
+    public StageResponse update(UUID id, StageUpdateRequest request) {
         Stage stage = getStage(id);
-        stage.updateDetails(request.title(), request.description(), request.displayOrder(),
+        OffsetDateTime now = now();
+        stage.updateDetails(request.title(), request.description(),
                 request.plannedStartDate(), request.plannedEndDate(), request.plannedBudget(), request.progress(), now());
-        return toResponse(stageRepository.save(stage));
+        Stage saved = stageRepository.save(stage);
+        record(saved, ActivityType.STAGE_UPDATED, "Étape mise à jour : " + saved.getTitle(), now);
+        return toResponse(saved);
     }
 
     public void delete(UUID id) {
@@ -110,10 +116,6 @@ public class StageServiceImpl implements StageService {
     private Stage getStage(UUID id) {
         return stageRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Étape introuvable : " + id));
-    }
-
-    private StageStatus initialStatus(int progress) {
-        return progress == 0 ? StageStatus.TODO : StageStatus.IN_PROGRESS;
     }
 
     private void record(Stage stage, ActivityType type, String description, OffsetDateTime occurredAt) {
