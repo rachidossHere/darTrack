@@ -1,0 +1,16 @@
+<section class="page-block">
+  <div class="section-head">
+    <span class="kicker">Photos & preuves</span>
+    <h2>Galerie du chantier</h2>
+  </div>
+
+  <div class="gallery-grid">
+    <article class="photo-card" *ngFor="let photo of photos">
+      <img [src]="photo.url" [alt]="photo.title" />
+      <div class="photo-meta">
+        <strong>{{ photo.title }}</strong>
+        <span>{{ photo.category }} • {{ photo.date }}</span>
+      </div>
+    </article>
+  </div>
+</section>

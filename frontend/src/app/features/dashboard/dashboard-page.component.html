@@ -1,0 +1,112 @@
+<ng-container *ngIf="vm$ | async as vm">
+  <section class="page-block hero-card" *ngIf="vm.project; else emptyProjectState">
+    <div class="hero-content">
+      <div>
+        <span class="kicker">Vue d'ensemble</span>
+        <h2>{{ vm.project.name }}</h2>
+      </div>
+      <label class="project-select" *ngIf="vm.projects.length > 0">
+        <span>Projet</span>
+        <select [value]="getSelectedProjectId(vm)" (change)="onProjectChange($any($event.target).value)">
+          <option *ngFor="let project of vm.projects" [value]="project.id">{{ project.name }}</option>
+        </select>
+      </label>
+      <div class="progress-ring" aria-label="Progression du chantier">
+        <span>{{ vm.project.progress }}%</span>
+      </div>
+    </div>
+
+    <div class="hero-actions">
+      <button class="ghost" type="button" (click)="openProjectDetail(vm.project)">Voir détail</button>
+      <button class="primary" type="button" (click)="openCreateProject()">Nouveau projet</button>
+    </div>
+
+    <div class="progress-row">
+      <div class="progress-bar">
+        <span [style.width.%]="vm.project.progress"></span>
+      </div>
+      <strong>{{ vm.project.progress }}% du chantier</strong>
+    </div>
+
+    <div class="stats-grid">
+      <article class="stat-card">
+        <span>Budget consommé</span>
+        <strong>{{ vm.totalSpent | mad }}</strong>
+      </article>
+      <article class="stat-card">
+        <span>Étapes terminées</span>
+        <strong>{{ vm.completedStages }}/{{ vm.stages.length }}</strong>
+      </article>
+      <article class="stat-card">
+        <span>Photos reçues</span>
+        <strong>{{ vm.photos.length }}</strong>
+      </article>
+      <article class="stat-card warning">
+        <span>Écart de planning</span>
+        <strong>+ 6 jours</strong>
+      </article>
+    </div>
+  </section>
+
+  <ng-template #emptyProjectState>
+    <section class="page-block empty-state">
+      <h2>Aucun projet disponible</h2>
+      <p>Commencez par créer un projet pour suivre votre chantier.</p>
+    </section>
+  </ng-template>
+
+  <section class="page-block approval-card" *ngIf="vm.project">
+    <div>
+      <span class="kicker">À valider</span>
+      <h3>Peinture et finitions</h3>
+    </div>
+    <div class="approval-actions">
+      <button class="ghost" type="button" (click)="openProjectDetail(vm.project)">Voir détail</button>
+      <button class="primary" type="button">Valider</button>
+      <button class="danger" type="button">Refuser</button>
+    </div>
+  </section>
+
+  <section class="grid-two" *ngIf="vm.project">
+    <article class="page-block">
+      <div class="section-head">
+        <h3>Historique</h3>
+      </div>
+      <ul class="timeline">
+        <li *ngFor="let activity of vm.activities">
+          <span class="dot"></span>
+          <div>
+            <strong>{{ activity.label }}</strong>
+            <small>{{ activity.date }}</small>
+            <p>{{ activity.detail }}</p>
+          </div>
+        </li>
+      </ul>
+    </article>
+
+    <article class="page-block">
+      <div class="section-head">
+        <h3>Dernières dépenses</h3>
+      </div>
+      <table class="simple-table">
+        <thead>
+          <tr>
+            <th>Libellé</th>
+            <th>Montant</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let expense of vm.expenses">
+            <td>{{ expense.label }}</td>
+            <td>{{ expense.amount | mad }}</td>
+            <td>
+              <span class="badge badge-paid" *ngIf="expense.status === 'PAID'">{{ expense.status | statusLabel }}</span>
+              <span class="badge badge-pending" *ngIf="expense.status === 'PENDING'">{{ expense.status | statusLabel }}</span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  </section>
+</ng-container>

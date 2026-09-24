@@ -1,0 +1,80 @@
+:host { display: block; }
+
+.page-block {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  box-shadow: var(--shadow-elevated);
+  padding: 24px;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.section-head {
+  margin-bottom: 22px;
+}
+
+.kicker {
+  display: inline-block;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+h2 { margin: 8px 0 0; }
+
+.secondary-btn {
+  border: 1px solid var(--color-line);
+  background: #f3f7f6;
+  color: var(--color-forest);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.simple-table {
+  width: 100%;
+  min-width: 560px;
+  border-collapse: collapse;
+}
+
+.simple-table th, .simple-table td {
+  padding: 12px 10px;
+  border-bottom: 1px solid var(--color-line);
+  text-align: left;
+}
+
+.simple-table th {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tag {
+  display: inline-flex;
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.tag.pdf { background: #dfeefd; color: #2a5ca8; }
+.tag.image { background: #e8f7ee; color: #1d7b59; }
+
+@media (max-width: 760px) {
+  .row-between { flex-direction: column; align-items: flex-start; }
+  .secondary-btn { width: 100%; }
+}

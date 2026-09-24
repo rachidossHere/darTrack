@@ -1,0 +1,109 @@
+:host { display: block; }
+
+.page-block {
+  background: var(--color-surface);
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+  box-shadow: var(--shadow-elevated);
+  padding: 24px;
+}
+
+.row-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.section-head {
+  margin-bottom: 22px;
+}
+
+.kicker {
+  display: inline-block;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+h2 { margin: 8px 0 0; }
+
+.secondary-btn {
+  border: 1px solid var(--color-line);
+  background: #f3f7f6;
+  color: var(--color-forest);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.timeline-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.step-card {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--color-background);
+  border: 1px solid var(--color-line);
+}
+
+.step-card.done { border-left: 5px solid #2fa86b; }
+.step-card.in-progress { border-left: 5px solid var(--color-gold); }
+.step-card.pending { border-left: 5px solid var(--color-orange); }
+
+.step-index {
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--color-forest);
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+}
+
+.step-body {
+  flex: 1;
+}
+
+.title-row { margin-bottom: 8px; }
+
+strong { display: block; }
+
+p { margin: 0 0 8px; color: var(--color-muted); }
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--color-ink);
+  font-weight: 700;
+}
+
+.status-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.status-tag.success { background: #dff8ec; color: #1d7b59; }
+.status-tag.warning { background: #fff0d8; color: #a66a00; }
+.status-tag.alert { background: #fde7e7; color: var(--color-red); }
+
+@media (max-width: 430px) {
+  .row-between, .meta-row { flex-direction: column; align-items: flex-start; }
+  .secondary-btn { width: 100%; }
+}

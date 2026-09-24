@@ -1,4 +1,46 @@
-<main class="app-shell">
-  <h1>DarTrack</h1>
-  <p>Frontend remis à zéro et prêt pour une nouvelle structure.</p>
-</main>
+<div class="app-layout">
+  <aside class="sidebar" [class.open]="mobileNavOpen()">
+    <div class="brand">
+      <span class="brand-mark">D</span>
+      <span class="brand-text">DarTrack</span>
+    </div>
+
+    <nav class="nav" aria-label="Menu principal">
+      <a routerLink="/overview" routerLinkActive="active" (click)="closeMenu()">Vue d'ensemble</a>
+      <a routerLink="/steps" routerLinkActive="active" (click)="closeMenu()">Étapes du chantier</a>
+      <a routerLink="/photos" routerLinkActive="active" (click)="closeMenu()">Photos &amp; preuves</a>
+      <a routerLink="/budget" routerLinkActive="active" (click)="closeMenu()">Budget</a>
+      <a routerLink="/documents" routerLinkActive="active" (click)="closeMenu()">Documents</a>
+    </nav>
+
+    <div class="profile-card">
+      <div class="avatar">LM</div>
+      <div class="profile-meta">
+        <strong>Latifa M.</strong>
+        <span>Propriétaire</span>
+      </div>
+    </div>
+  </aside>
+
+  <div class="overlay" *ngIf="mobileNavOpen()" (click)="closeMenu()"></div>
+
+  <div class="main-panel">
+    <header class="topbar">
+      <button class="menu-button" type="button" aria-label="Ouvrir le menu" (click)="toggleMenu()">
+        ☰
+      </button>
+      <div class="topbar-title">
+        <span class="eyebrow">Projet en cours</span>
+        <h1>Rénovation appartement Rabat</h1>
+      </div>
+      <div class="topbar-actions">
+        <span class="status-pill">Suivi actif</span>
+        <button class="primary-button" type="button" (click)="openNewStep()">Nouvelle étape</button>
+      </div>
+    </header>
+
+    <main class="content-shell">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>

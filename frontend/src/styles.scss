@@ -1,7 +1,41 @@
-/* You can add global styles to this file, and also import other style files */
+:root {
+  --color-ink: #17312d;
+  --color-muted: #6f7f7c;
+  --color-forest: #153f38;
+  --color-mint: #d9eee7;
+  --color-sand: #f5f0e6;
+  --color-gold: #f4c76d;
+  --color-orange: #df7846;
+  --color-red: #b94f4f;
+  --color-line: #e2e9e6;
+  --color-surface: #ffffff;
+  --color-background: #f7f9f8;
+  --shadow-elevated: 0 14px 40px rgba(22, 63, 56, 0.10);
+}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html, body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  background: var(--color-background);
+  color: var(--color-ink);
+}
+
+a, button, input, textarea, select {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+* {
+  box-sizing: border-box;
+}
 
 .toast-success .mdc-snackbar__surface { background:#246b50 !important; }
 .toast-error .mdc-snackbar__surface { background:#a34539 !important; }

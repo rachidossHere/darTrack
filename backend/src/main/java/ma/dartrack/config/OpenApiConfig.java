@@ -2,6 +2,7 @@ package ma.dartrack.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -14,5 +15,13 @@ public class OpenApiConfig {
                 .title("DarTrack API")
                 .description("API REST du prototype local DarTrack")
                 .version("v1"));
+    }
+
+    @Bean
+    public GroupedOpenApi darTrackApiGroup() {
+        return GroupedOpenApi.builder()
+                .group("dartrack-v1")
+                .pathsToMatch("/api/v1/**")
+                .build();
     }
 }
