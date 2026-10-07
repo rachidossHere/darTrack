@@ -1,26 +1,27 @@
 package ma.dartrack.services.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.OffsetDateTime;
-import ma.dartrack.models.*;
-import ma.dartrack.repositories.*;
-import ma.dartrack.services.*;
 import java.time.ZoneOffset;
-import ma.dartrack.models.*;
-import ma.dartrack.repositories.*;
-import ma.dartrack.services.*;
 import java.util.List;
-import ma.dartrack.models.*;
-import ma.dartrack.repositories.*;
-import ma.dartrack.services.*;
 import java.util.UUID;
-import ma.dartrack.models.*;
-import ma.dartrack.repositories.*;
-import ma.dartrack.services.*;
-import ma.dartrack.models.Activity;
-import ma.dartrack.repositories.ActivityRepository;
-import ma.dartrack.models.ActivityType;
 import ma.dartrack.common.ResourceNotFoundException;
+import ma.dartrack.models.Activity;
+import ma.dartrack.models.ActivityType;
+import ma.dartrack.models.Document;
+import ma.dartrack.models.Project;
+import ma.dartrack.models.ProjectCreateRequest;
+import ma.dartrack.models.ProjectResponse;
+import ma.dartrack.models.ProjectStatus;
+import ma.dartrack.models.ProjectType;
 import ma.dartrack.models.Stage;
+import ma.dartrack.repositories.ActivityRepository;
+import ma.dartrack.repositories.DocumentRepository;
+import ma.dartrack.repositories.ProjectRepository;
+import ma.dartrack.repositories.StageRepository;
+import ma.dartrack.services.ProjectService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,10 +31,15 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final ActivityRepository activityRepository;
+    private final StageRepository stageRepository;
+    private final DocumentRepository documentRepository;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository, ActivityRepository activityRepository) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, ActivityRepository activityRepository,
+                             StageRepository stageRepository, DocumentRepository documentRepository) {
         this.projectRepository = projectRepository;
         this.activityRepository = activityRepository;
+        this.stageRepository = stageRepository;
+        this.documentRepository = documentRepository;
     }
 
     @Transactional(readOnly = true)
@@ -70,6 +76,24 @@ public class ProjectServiceImpl implements ProjectService {
 
     public void delete(UUID id) {
         Project project = getProject(id);
+
+        List<Stage> stages = stageRepository.findAllByProjectOrderByDisplayOrder(project);
+        if (!stages.isEmpty()) {
+            stageRepository.deleteAll(stages);
+        }
+
+        List<Document> documents = documentRepository.findAllByProjectOrderByAddedAtDesc(project);
+        for (Document document : documents) {
+            try {
+                Files.deleteIfExists(Path.of(document.getLocalPath()));
+            } catch (IOException exception) {
+                throw new IllegalStateException("Impossible de supprimer le fichier du document " + document.getId(), exception);
+            }
+        }
+        if (!documents.isEmpty()) {
+            documentRepository.deleteAll(documents);
+        }
+
         projectRepository.delete(project);
     }
 

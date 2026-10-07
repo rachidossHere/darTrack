@@ -18,46 +18,42 @@ export class DashboardEffects {
       switchMap((action) => {
         const selectedProjectId = 'projectId' in action ? action.projectId : null;
 
-        return this.store.select((state) => state.dashboard.selectedProjectId).pipe(
-          take(1),
-          switchMap((currentSelectedProjectId) => {
-            const projectId = selectedProjectId ?? currentSelectedProjectId;
+        return this.dashboardService.getProjects().pipe(
+          switchMap((projects) => {
+            const availableProjects = projects ?? [];
+            const fallbackProject = availableProjects[0] ?? null;
+            const project = selectedProjectId
+              ? availableProjects.find((item) => item.id === selectedProjectId) ?? fallbackProject
+              : fallbackProject;
 
-            return this.dashboardService.getProjects().pipe(
-              switchMap((projects) => {
-                const availableProjects = projects ?? [];
-                const project = projectId ? availableProjects.find((item) => item.id === projectId) ?? availableProjects[0] ?? null : availableProjects[0] ?? null;
+            if (!project) {
+              return of(
+                DashboardActions.loadDashboardFailure({ error: 'Aucun projet disponible.' })
+              );
+            }
 
-                if (!project) {
-                  return of(
-                    DashboardActions.loadDashboardFailure({ error: 'Aucun projet disponible.' })
-                  );
-                }
-
-                return forkJoin({
-                  project: of(project),
-                  stages: this.dashboardService.getStages(project.id),
-                  expenses: this.dashboardService.getExpenses(project.id),
-                  activities: this.dashboardService.getActivities(project.id),
-                  photos: this.dashboardService.getPhotos(),
-                  documents: this.dashboardService.getDocuments(project.id)
-                }).pipe(
-                  map(({ project, stages, expenses, activities, photos, documents }) =>
-                    DashboardActions.loadDashboardSuccess({
-                      projects: availableProjects,
-                      project,
-                      stages: stages ?? [],
-                      expenses: expenses ?? [],
-                      activities: activities ?? [],
-                      photos: photos ?? [],
-                      documents: documents ?? []
-                    })
-                  )
-                );
-              }),
-              catchError(() => of(DashboardActions.loadDashboardFailure({ error: 'Erreur de chargement du dashboard.' })))
+            return forkJoin({
+              project: of(project),
+              stages: this.dashboardService.getStages(project.id),
+              expenses: this.dashboardService.getExpenses(project.id),
+              activities: this.dashboardService.getActivities(project.id),
+              photos: this.dashboardService.getPhotos(),
+              documents: this.dashboardService.getDocuments(project.id)
+            }).pipe(
+              map(({ project, stages, expenses, activities, photos, documents }) =>
+                DashboardActions.loadDashboardSuccess({
+                  projects: availableProjects,
+                  project,
+                  stages: stages ?? [],
+                  expenses: expenses ?? [],
+                  activities: activities ?? [],
+                  photos: photos ?? [],
+                  documents: documents ?? []
+                })
+              )
             );
-          })
+          }),
+          catchError(() => of(DashboardActions.loadDashboardFailure({ error: 'Erreur de chargement du dashboard.' })))
         );
       })
     )

@@ -20,7 +20,8 @@ export const dashboardReducer = createReducer(
   on(DashboardActions.loadDashboard, (state) => ({ ...state, loading: true, error: null })),
   on(DashboardActions.selectProject, (state, { projectId }) => ({
     ...state,
-    selectedProjectId: projectId
+    selectedProjectId: projectId,
+    project: state.projects.find((project) => project.id === projectId) ?? state.project
   })),
   on(DashboardActions.loadDashboardSuccess, (state, { projects, project, stages, activities, expenses, photos, documents }) => ({
     ...state,

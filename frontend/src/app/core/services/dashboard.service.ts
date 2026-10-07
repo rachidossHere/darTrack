@@ -22,6 +22,120 @@ export class DashboardService {
     );
   }
 
+  createProject(project: {
+    name: string;
+    description?: string;
+    propertyType: string;
+    city: string;
+    budget: number;
+    address?: string;
+    startDate?: string | null;
+    estimatedEndDate?: string | null;
+  }): Observable<Project> {
+    const payload = {
+      name: project.name,
+      description: project.description ?? '',
+      type: this.mapProjectType(project.propertyType),
+      address: project.address ?? project.city ?? '',
+      city: project.city,
+      initialBudget: Number(project.budget ?? 0),
+      startDate: project.startDate || null,
+      estimatedEndDate: project.estimatedEndDate || null,
+      status: 'DRAFT'
+    };
+
+    return this.http.post<ProjectResponse>(`${this.apiUrl}/projects`, payload).pipe(
+      map((createdProject) => this.toProject(createdProject) as Project)
+    );
+  }
+
+  createStage(projectId: string, stage: {
+    title: string;
+    description?: string;
+    plannedStart?: string | null;
+    plannedEnd?: string | null;
+    plannedBudget?: number | null;
+  }): Observable<Stage> {
+    const payload = {
+      title: stage.title,
+      description: stage.description ?? '',
+      plannedStartDate: stage.plannedStart || null,
+      plannedEndDate: stage.plannedEnd || null,
+      plannedBudget: Number(stage.plannedBudget ?? 0)
+    };
+
+    return this.http.post<StageResponse>(`${this.apiUrl}/projects/${projectId}/stages`, payload).pipe(
+      map((createdStage) => ({
+        id: createdStage.id,
+        title: createdStage.title,
+        description: createdStage.description ?? '',
+        plannedStart: createdStage.plannedStartDate ?? '',
+        plannedEnd: createdStage.plannedEndDate ?? '',
+        plannedBudget: Number(createdStage.plannedBudget ?? 0),
+        actualCost: 0,
+        progress: createdStage.progress ?? 0,
+        status: createdStage.status,
+        comment: createdStage.rejectionComment ?? undefined
+      }))
+    );
+  }
+
+  createExpense(projectId: string, expense: {
+    label: string;
+    amount: number;
+    date: string;
+    category: string;
+    vendor?: string;
+    stageId?: string | null;
+  }): Observable<Expense> {
+    const payload = {
+      label: expense.label,
+      amount: Number(expense.amount ?? 0),
+      expenseDate: expense.date,
+      category: this.mapExpenseCategory(expense.category),
+      provider: expense.vendor ?? '',
+      reference: '',
+      paymentStatus: 'PENDING',
+      stageId: expense.stageId ?? null
+    };
+
+    return this.http.post<ExpenseResponse>(`${this.apiUrl}/projects/${projectId}/expenses`, payload).pipe(
+      map((createdExpense) => ({
+        id: createdExpense.id,
+        label: createdExpense.label,
+        amount: Number(createdExpense.amount ?? 0),
+        date: createdExpense.expenseDate ?? '',
+        category: createdExpense.category,
+        status: createdExpense.paymentStatus,
+        vendor: createdExpense.provider ?? ''
+      }))
+    );
+  }
+
+  uploadDocument(projectId: string, document: {
+    title: string;
+    type: string;
+    file: File;
+    stageId?: string | null;
+  }): Observable<DocumentItem> {
+    const formData = new FormData();
+    formData.append('file', document.file, document.file.name);
+    formData.append('type', this.mapDocumentType(document.type));
+    if (document.stageId) {
+      formData.append('stageId', document.stageId);
+    }
+
+    return this.http.post<DocumentResponse>(`${this.apiUrl}/projects/${projectId}/documents`, formData).pipe(
+      map((uploadedDocument) => ({
+        id: uploadedDocument.id,
+        title: uploadedDocument.originalName,
+        type: uploadedDocument.type,
+        date: uploadedDocument.addedAt ?? '',
+        size: this.formatFileSize(uploadedDocument.size)
+      }))
+    );
+  }
+
   getStages(projectId?: string): Observable<Stage[]> {
     const id = projectId ?? '';
 
@@ -97,7 +211,7 @@ export class DashboardService {
       id: project.id,
       name: project.name,
       description: project.description ?? '',
-      propertyType: project.type,
+      propertyType: this.formatProjectTypeLabel(project.type),
       city: project.city,
       budget: Number(project.initialBudget ?? 0),
       spent: 0,
@@ -107,6 +221,66 @@ export class DashboardService {
       progress: project.progress ?? 0,
       address: project.address
     };
+  }
+
+  private formatProjectTypeLabel(type: string | null | undefined): string {
+    const normalized = (type ?? '').toUpperCase();
+    const labels: Record<string, string> = {
+      APARTMENT: 'Appartement',
+      HOUSE: 'Maison',
+      VILLA: 'Villa',
+      COMMERCIAL: 'Local commercial',
+      OTHER: 'Autre'
+    };
+
+    return labels[normalized] ?? 'Autre';
+  }
+
+  private mapProjectType(value: string): string {
+    const normalized = (value ?? '').toLowerCase();
+    const mapping: Record<string, string> = {
+      appartement: 'APARTMENT',
+      maison: 'HOUSE',
+      villa: 'VILLA',
+      'local commercial': 'COMMERCIAL',
+      autre: 'OTHER',
+      apartment: 'APARTMENT',
+      house: 'HOUSE',
+      commercial: 'COMMERCIAL',
+      other: 'OTHER'
+    };
+
+    return mapping[normalized] ?? 'OTHER';
+  }
+
+  private mapExpenseCategory(value: string): string {
+    const normalized = (value ?? '').toLowerCase();
+    const mapping: Record<string, string> = {
+      matériaux: 'MATERIALS',
+      materiaux: 'MATERIALS',
+      'main-d\'œuvre': 'LABOR',
+      'main-doeuvre': 'LABOR',
+      transport: 'TRANSPORT',
+      équipement: 'EQUIPMENT',
+      equipement: 'EQUIPMENT',
+      'frais administratifs': 'ADMINISTRATIVE',
+      'frais-administratifs': 'ADMINISTRATIVE',
+      autre: 'OTHER'
+    };
+
+    return mapping[normalized] ?? 'OTHER';
+  }
+
+  private mapDocumentType(value: string): string {
+    const normalized = (value ?? '').toUpperCase();
+    const mapping: Record<string, string> = {
+      PDF: 'QUOTE',
+      JPG: 'SITE_PHOTO',
+      PNG: 'SITE_PHOTO',
+      DOC: 'OTHER'
+    };
+
+    return mapping[normalized] ?? 'OTHER';
   }
 
   private formatFileSize(size: number): string {

@@ -1,16 +1,27 @@
-<section class="page-block">
-  <div class="section-head">
-    <span class="kicker">Photos & preuves</span>
-    <h2>Galerie du chantier</h2>
-  </div>
-
-  <div class="gallery-grid">
-    <article class="photo-card" *ngFor="let photo of photos">
-      <img [src]="photo.url" [alt]="photo.title" />
-      <div class="photo-meta">
-        <strong>{{ photo.title }}</strong>
-        <span>{{ photo.category }} • {{ photo.date }}</span>
+<ng-container *ngIf="vm$ | async as vm">
+  <section class="page-block">
+    <div class="section-head row-between">
+      <div>
+        <span class="kicker">Photos &amp; preuves</span>
+        <h2>Galerie du chantier</h2>
       </div>
-    </article>
-  </div>
-</section>
+      <button class="secondary-btn" type="button" (click)="openAddPhotos(vm)">Ajouter des images</button>
+    </div>
+
+    <div class="gallery-grid" *ngIf="vm.photos.length; else emptyPhotosState">
+      <article class="photo-card" *ngFor="let photo of vm.photos; let index = index" (click)="openGallery(vm.photos, index)">
+        <img [src]="photo.url" [alt]="photo.title" />
+        <div class="photo-meta">
+          <strong>{{ photo.title }}</strong>
+          <span>{{ photo.category }} • {{ photo.date }}</span>
+        </div>
+      </article>
+    </div>
+
+    <ng-template #emptyPhotosState>
+      <div class="empty-state">
+        <p>Aucune photo enregistrée pour ce projet.</p>
+      </div>
+    </ng-template>
+  </section>
+</ng-container>

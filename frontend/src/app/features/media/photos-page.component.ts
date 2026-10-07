@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { Observable } from 'rxjs';
+import { DashboardState, DashboardViewModel, PhotoItem } from '../../shared/models/dashboard.model';
+import { selectDashboardViewModel } from '../../store/dashboard/dashboard.selectors';
+import { DarTrackDialogService } from '../../shared/services/dartrack-dialog.service';
 
 @Component({
   selector: 'dar-photos-page',
@@ -9,9 +14,16 @@ import { Component } from '@angular/core';
   styleUrl: './photos-page.component.scss'
 })
 export class PhotosPageComponent {
-  readonly photos = [
-    { title: 'Mur avant travaux', date: '2025-02-18', category: 'Avant', url: 'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80' },
-    { title: 'Nouveau réseau', date: '2025-03-06', category: 'Plomberie', url: 'https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80' },
-    { title: 'Finition des sols', date: '2025-03-14', category: 'Sol', url: 'https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80' }
-  ];
+  private readonly store = inject(Store<{ dashboard: DashboardState }>);
+  private readonly dialogService = inject(DarTrackDialogService);
+  readonly vm$: Observable<DashboardViewModel> = this.store.select(selectDashboardViewModel);
+
+  openGallery(photos: PhotoItem[], startIndex = 0): void {
+    this.dialogService.openPhotoGallery(photos, startIndex).subscribe();
+  }
+
+  openAddPhotos(vm: DashboardViewModel): void {
+    const selectedProjectId = vm.selectedProjectId ?? vm.projects[0]?.id ?? null;
+    this.dialogService.openDocumentForm(vm.projects, selectedProjectId).subscribe();
+  }
 }

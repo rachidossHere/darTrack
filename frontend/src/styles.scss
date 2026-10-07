@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+
 :root {
   --color-ink: #17312d;
   --color-muted: #6f7f7c;
@@ -11,6 +13,8 @@
   --color-surface: #ffffff;
   --color-background: #f7f9f8;
   --shadow-elevated: 0 14px 40px rgba(22, 63, 56, 0.10);
+  --mdc-typography-font-family: "Poppins", "Segoe UI", sans-serif;
+  --mdc-dialog-supporting-text-font: "Poppins", "Segoe UI", sans-serif;
 }
 
 html, body {
@@ -19,7 +23,7 @@ html, body {
 
 body {
   margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
+  font-family: "Poppins", "Segoe UI", sans-serif;
   background: var(--color-background);
   color: var(--color-ink);
 }
@@ -35,6 +39,52 @@ img {
 
 * {
   box-sizing: border-box;
+}
+
+.mat-mdc-dialog-container,
+.mat-mdc-dialog-title,
+.mat-mdc-dialog-content,
+.mat-mdc-dialog-actions,
+.mdc-dialog__surface,
+.mdc-dialog .mdc-dialog__surface,
+.mdc-dialog__content,
+.mdc-text-field__input,
+.mdc-floating-label,
+.mdc-select__selected-text {
+  font-family: "Poppins", "Segoe UI", sans-serif !important;
+}
+
+button[mat-flat-button],
+button[mat-button],
+button[mat-stroked-button],
+.mdc-button,
+.mat-mdc-button,
+.mat-mdc-select,
+.mat-mdc-select-value,
+.mat-mdc-option,
+.mdc-text-field__input,
+.mdc-floating-label,
+.mdc-select__selected-text {
+  font-family: "Poppins", "Segoe UI", sans-serif !important;
+  font-size: 0.98rem !important;
+}
+
+.mat-mdc-dialog-title {
+  font-size: 1.05rem !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.02em;
+}
+
+.mdc-text-field {
+  font-size: 0.98rem;
+}
+
+.mdc-text-field .mdc-floating-label {
+  font-size: 0.92rem !important;
+}
+
+.mat-mdc-form-field {
+  font-size: 0.98rem;
 }
 
 .toast-success .mdc-snackbar__surface { background:#246b50 !important; }

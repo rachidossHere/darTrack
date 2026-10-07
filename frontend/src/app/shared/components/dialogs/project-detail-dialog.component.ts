@@ -18,7 +18,7 @@ import { Project } from '../../models/dashboard.model';
       </div>
       <div class="field-row">
         <span class="label">Type</span>
-        <strong>{{ data.propertyType }}</strong>
+        <strong>{{ propertyTypeLabel }}</strong>
       </div>
       <div class="field-row">
         <span class="label">Ville</span>
@@ -76,4 +76,21 @@ export class ProjectDetailDialogComponent {
     public readonly dialogRef: MatDialogRef<ProjectDetailDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public readonly data: Project
   ) {}
+
+  get propertyTypeLabel(): string {
+    const value = (this.data.propertyType ?? '').toUpperCase();
+
+    switch (value) {
+      case 'APARTMENT':
+        return 'Appartement';
+      case 'HOUSE':
+        return 'Maison';
+      case 'VILLA':
+        return 'Villa';
+      case 'COMMERCIAL':
+        return 'Local commercial';
+      default:
+        return 'Autre';
+    }
+  }
 }

@@ -1,57 +1,63 @@
-<section class="page-block">
-  <div class="section-head row-between">
-    <div>
-      <span class="kicker">Budget</span>
-      <h2>Suivi des dépenses</h2>
+<ng-container *ngIf="vm$ | async as vm">
+  <section class="page-block">
+    <div class="section-head row-between">
+      <div>
+        <span class="kicker">Budget</span>
+        <h2>Suivi des dépenses</h2>
+      </div>
+      <button class="secondary-btn" type="button" (click)="openNewExpense(vm)">Ajouter une dépense</button>
     </div>
-    <button class="secondary-btn" type="button">Ajouter une dépense</button>
-  </div>
 
-  <div class="summary-grid">
-    <article class="summary-card">
-      <span>Budget initial</span>
-      <strong>160 000 MAD</strong>
-    </article>
-    <article class="summary-card">
-      <span>Dépenses totales</span>
-      <strong>98 000 MAD</strong>
-    </article>
-    <article class="summary-card accent">
-      <span>Budget restant</span>
-      <strong>62 000 MAD</strong>
-    </article>
-  </div>
+    <div class="summary-grid" *ngIf="vm.project; else noProjectState">
+      <article class="summary-card">
+        <span>Budget initial</span>
+        <strong>{{ vm.project.budget | mad }}</strong>
+      </article>
+      <article class="summary-card">
+        <span>Dépenses totales</span>
+        <strong>{{ vm.totalSpent | mad }}</strong>
+      </article>
+      <article class="summary-card accent">
+        <span>Budget restant</span>
+        <strong>{{ vm.remainingBudget | mad }}</strong>
+      </article>
+    </div>
 
-  <div class="table-wrap">
-    <table class="simple-table">
-      <thead>
-        <tr>
-          <th>Libellé</th>
-          <th>Catégorie</th>
-          <th>Montant</th>
-          <th>Statut</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Matériaux plomberie</td>
-          <td>Matériaux</td>
-          <td>8 500 MAD</td>
-          <td><span class="badge badge-paid">Payé</span></td>
-        </tr>
-        <tr>
-          <td>Main d'œuvre peinture</td>
-          <td>Main-d'œuvre</td>
-          <td>12 400 MAD</td>
-          <td><span class="badge badge-pending">En attente</span></td>
-        </tr>
-        <tr>
-          <td>Transport matériel</td>
-          <td>Transport</td>
-          <td>2 100 MAD</td>
-          <td><span class="badge badge-paid">Payé</span></td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</section>
+    <div class="table-wrap" *ngIf="vm.expenses.length; else emptyExpensesState">
+      <table class="simple-table">
+        <thead>
+          <tr>
+            <th>Libellé</th>
+            <th>Catégorie</th>
+            <th>Montant</th>
+            <th>Statut</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let expense of vm.expenses">
+            <td>{{ expense.label }}</td>
+            <td>{{ expense.category }}</td>
+            <td>{{ expense.amount | mad }}</td>
+            <td>
+              <span class="badge" [ngClass]="expense.status === 'PAID' ? 'badge-paid' : 'badge-pending'">
+                {{ expense.status | statusLabel }}
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <ng-template #noProjectState>
+      <div class="empty-state">
+        <p>Aucun projet disponible pour afficher le budget.</p>
+      </div>
+    </ng-template>
+
+    <ng-template #emptyExpensesState>
+      <div class="empty-state">
+        <p>Aucune dépense enregistrée pour ce projet.</p>
+      </div>
+    </ng-template>
+  </section>
+</ng-container>

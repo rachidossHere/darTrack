@@ -29,13 +29,12 @@
       <button class="menu-button" type="button" aria-label="Ouvrir le menu" (click)="toggleMenu()">
         ☰
       </button>
-      <div class="topbar-title">
+      <div class="topbar-title" *ngIf="selectedProject$ | async as project">
         <span class="eyebrow">Projet en cours</span>
-        <h1>Rénovation appartement Rabat</h1>
+        <h1>{{ getProjectTitle(project) }}</h1>
       </div>
       <div class="topbar-actions">
         <span class="status-pill">Suivi actif</span>
-        <button class="primary-button" type="button" (click)="openNewStep()">Nouvelle étape</button>
       </div>
     </header>
 

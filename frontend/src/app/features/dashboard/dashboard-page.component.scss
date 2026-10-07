@@ -7,22 +7,20 @@
 }
 
 .project-select {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 200px;
+  min-width: 240px;
+  max-width: 360px;
+  width: 100%;
   color: var(--color-muted);
   font-size: 0.8rem;
   font-weight: 600;
 }
 
-.project-select select {
-  border: 1px solid var(--color-line);
-  border-radius: 10px;
-  background: var(--color-background);
-  color: var(--color-ink);
-  padding: 10px 12px;
-  font: inherit;
+.project-select .mat-mdc-form-field-infix {
+  min-height: 48px;
+}
+
+.project-select .mdc-notched-outline {
+  background: rgba(255, 255, 255, 0.12);
 }
 
 .hero-card { margin-bottom: 22px; }

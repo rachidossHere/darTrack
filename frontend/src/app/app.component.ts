@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
-import { ProjectFormDialogComponent } from './shared/components/dialogs/project-form-dialog.component';
+import { Store } from '@ngrx/store';
+import { map } from 'rxjs';
+import { DashboardState, Project } from './shared/models/dashboard.model';
+import { selectDashboardProject } from './store/dashboard/dashboard.selectors';
 
 @Component({
   selector: 'dar-root',
@@ -14,7 +16,37 @@ import { ProjectFormDialogComponent } from './shared/components/dialogs/project-
 })
 export class AppComponent {
   readonly mobileNavOpen = signal(false);
-  private readonly dialog = inject(MatDialog);
+  private readonly store = inject(Store<{ dashboard: DashboardState }>);
+  readonly selectedProject$ = this.store.select(selectDashboardProject).pipe(
+    map((project) => project ?? null)
+  );
+
+  getProjectTitle(project: Project | null): string {
+    if (!project) {
+      return 'Rénovation';
+    }
+
+    const typeLabel = this.normalizePropertyType(project.propertyType);
+    return `Rénovation ${typeLabel} ${project.name}`.trim();
+  }
+
+  private normalizePropertyType(type: string | null | undefined): string {
+    const normalized = (type ?? '').trim().toLowerCase();
+
+    switch (normalized) {
+      case 'maison':
+        return 'maison';
+      case 'villa':
+        return 'villa';
+      case 'local commercial':
+        return 'local commercial';
+      case 'autre':
+        return 'autre';
+      case 'appartement':
+      default:
+        return 'appartement';
+    }
+  }
 
   toggleMenu(): void {
     this.mobileNavOpen.update((value) => !value);
@@ -22,12 +54,5 @@ export class AppComponent {
 
   closeMenu(): void {
     this.mobileNavOpen.set(false);
-  }
-
-  openNewStep(): void {
-    this.dialog.open(ProjectFormDialogComponent, {
-      data: { title: 'Créer une étape' },
-      width: '560px'
-    });
   }
 }
